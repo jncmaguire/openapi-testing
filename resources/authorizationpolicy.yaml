@@ -1,0 +1,68 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: httpbin
+  namespace: pets
+spec:
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        methods: ["PUT", "POST"]
+        paths: ["/pet"]
+    when:
+    - key: request.auth.claims[role]
+      values: ["write:pets", "read:pets"]
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/pet/findByStatus"]
+    when:
+    - key: request.auth.claims[role]
+      values: ["write:pets", "read:pets"]
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/pet/findByTags"]
+    when:
+    - key: request.auth.claims[role]
+      values: ["write:pets", "read:pets"]
+  - to:
+    - operation:
+        methods: ["GET", "POST", "DELETE"]
+        paths: ["/pet/*"]
+    when:
+    - key: request.auth.claims[role]
+      values: ["write:pets", "read:pets"]
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/store/inventory"]
+  - to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/store/order"]
+  - to:
+    - operation:
+        methods: ["GET", "DELETE"]
+        paths: ["/store/order/*"]
+  - to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/user"]
+  - to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/user/createWithList"]
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/user/login"]
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/user/logout"]
+  - to:
+    - operation:
+        methods: ["GET", "PUT"]
+        paths: ["/user/*"]
